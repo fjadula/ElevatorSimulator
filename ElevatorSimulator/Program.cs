@@ -19,10 +19,10 @@ namespace ElevatorSimulator
 
       do
       {
-        Console.WriteLine("Elevator Simulator Menu");
-        Console.WriteLine("1. Show Status of Elevator");
-        Console.WriteLine("2. Call Elevator");
-        Console.WriteLine("3. Set Status of Elevator");
+        Console.WriteLine("Elevator simulator Menu");
+        Console.WriteLine("1. Show status of all the elevators");
+        Console.WriteLine("2. Call an elevator");
+        Console.WriteLine("3. Set status of an elevator");
         Console.WriteLine("4. Exit Program");
 
         Console.WriteLine("Enter your choice (1-4):");
@@ -82,26 +82,34 @@ namespace ElevatorSimulator
                 Console.WriteLine($"Elevator {selectedElevator.Id} is now empty.");
               }
 
-              // Calculate the remaining capacity for people waiting
-              int remainingCapacity = selectedElevator.WeightLimit - selectedElevator.PeopleCount;
-
-              // Check if there is remaining capacity for people waiting
-              if (remainingCapacity > 0)
-              {
-                // Calculate the number of people that can fit within the remaining capacity
-                int peopleToAccommodate = Math.Min(remainingCapacity, peopleWaiting);
-
-                // Update elevator properties for people waiting
-                selectedElevator.PeopleCount += peopleToAccommodate;
-                peopleWaiting -= peopleToAccommodate;
-                // Update other elevator properties as needed
-
-                Console.WriteLine($"Elevator {selectedElevator.Id} accommodated {peopleToAccommodate} people waiting on the destination floor.");
-              }
-
               if (peopleWaiting > 0)
               {
-                Console.WriteLine($"There are still {peopleWaiting} people waiting on the destination floor.");
+                // Calculate the maximum number of people from the waiting group who can get on without exceeding the weight limit
+                int maxPeopleGettingOnFromWaiting = Math.Min(selectedElevator.WeightLimit - selectedElevator.PeopleCount, peopleWaiting);
+
+                // Prompt for the number of people from the waiting group getting on
+                Console.WriteLine($"How many people from the waiting group are getting on? (Up to {maxPeopleGettingOnFromWaiting})");
+                int peopleGettingOnFromWaiting = Convert.ToInt32(Console.ReadLine());
+
+                // Check if the number of people getting on exceeds the available spots
+                if (peopleGettingOnFromWaiting > maxPeopleGettingOnFromWaiting)
+                {
+                  Console.WriteLine($"Weight Limit Exceeded.Only up to {maxPeopleGettingOnFromWaiting} people from the waiting group can get on.");
+                  break;
+                }
+
+                // Check if the number of people getting on from the waiting group exceeds the weight limit
+                if (peopleGettingOnFromWaiting + selectedElevator.PeopleCount > selectedElevator.WeightLimit)
+                {
+                  Console.WriteLine("Weight limit exceeded. Cannot accommodate that many people.");
+                  break;
+                }
+
+                // Update elevator properties based on the number of people getting on from the waiting group
+                selectedElevator.PeopleCount += peopleGettingOnFromWaiting;
+                // Update other elevator properties as needed
+
+                Console.WriteLine($"Elevator {selectedElevator.Id} accommodated {peopleGettingOnFromWaiting} people from the waiting group.");
               }
             }
             else
@@ -109,7 +117,6 @@ namespace ElevatorSimulator
               Console.WriteLine("No operational elevators available. Please try again later.");
             }
             break;
-
           case 3:
             Console.WriteLine("Enter the elevator number:");
             int elevatorNum = Convert.ToInt32(Console.ReadLine());
