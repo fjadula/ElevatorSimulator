@@ -31,10 +31,9 @@ namespace ElevatorSimulator
         switch (choice)
         {
           case 1:
-            Console.WriteLine("Elevator Status:");
             for (int i = 0; i < elevators.Count; i++)
             {
-              Console.WriteLine($"Elevator {i + 1} Status:");
+             
               elevators[i].ShowStatus();
               Console.WriteLine();
             }
