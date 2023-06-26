@@ -31,10 +31,9 @@ namespace ElevatorSimulator
         switch (choice)
         {
           case 1:
-            for (int i = 0; i < elevators.Count; i++)
+            foreach (var elevator in elevators)
             {
-             
-              elevators[i].ShowStatus();
+              elevator.ShowStatus();
               Console.WriteLine();
             }
             break;
@@ -64,6 +63,46 @@ namespace ElevatorSimulator
               // Update other elevator properties as needed
 
               Console.WriteLine($"Elevator {selectedElevator.Id} called successfully!");
+
+              // Prompt for the number of people getting off
+              Console.WriteLine("How many people are getting off?");
+              int peopleGettingOff = Convert.ToInt32(Console.ReadLine());
+
+              // Ensure the number of people getting off doesn't exceed the current PeopleCount
+              peopleGettingOff = Math.Min(peopleGettingOff, selectedElevator.PeopleCount);
+
+              // Update elevator properties based on the number of people getting off
+              selectedElevator.PeopleCount -= peopleGettingOff;
+              // Update other elevator properties as needed
+
+              Console.WriteLine($"Elevator {selectedElevator.Id} reached the destination floor. {peopleGettingOff} people got off.");
+
+              if (selectedElevator.PeopleCount == 0)
+              {
+                Console.WriteLine($"Elevator {selectedElevator.Id} is now empty.");
+              }
+
+              // Calculate the remaining capacity for people waiting
+              int remainingCapacity = selectedElevator.WeightLimit - selectedElevator.PeopleCount;
+
+              // Check if there is remaining capacity for people waiting
+              if (remainingCapacity > 0)
+              {
+                // Calculate the number of people that can fit within the remaining capacity
+                int peopleToAccommodate = Math.Min(remainingCapacity, peopleWaiting);
+
+                // Update elevator properties for people waiting
+                selectedElevator.PeopleCount += peopleToAccommodate;
+                peopleWaiting -= peopleToAccommodate;
+                // Update other elevator properties as needed
+
+                Console.WriteLine($"Elevator {selectedElevator.Id} accommodated {peopleToAccommodate} people waiting on the destination floor.");
+              }
+
+              if (peopleWaiting > 0)
+              {
+                Console.WriteLine($"There are still {peopleWaiting} people waiting on the destination floor.");
+              }
             }
             else
             {
