@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator", "Elevat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Models", "ElevatorSimulator.Models\ElevatorSimulator.Models.csproj", "{CBAE05A7-B951-4DCC-BD36-FDB5729482AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Services", "ElevatorSimulation.Service\ElevatorSimulator.Services.csproj", "{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CBAE05A7-B951-4DCC-BD36-FDB5729482AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBAE05A7-B951-4DCC-BD36-FDB5729482AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBAE05A7-B951-4DCC-BD36-FDB5729482AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
