@@ -171,14 +171,12 @@ namespace ElevatorSimulator
     }
 
     // Simulate the movement of the elevator
-    // Simulate the movement of the elevator
     private static void MoveElevator(Elevator elevator)
     {
       Console.WriteLine($"Elevator {elevator.Id} is moving from floor {elevator.CurrentFloor} to floor {elevator.DestinationFloor}...");
       int distance = Math.Abs(elevator.CurrentFloor - elevator.DestinationFloor);
       int travelTimeInSeconds = distance * 2; // Assuming 2 seconds for each floor
       elevator.Direction = elevator.CurrentFloor < elevator.DestinationFloor ? Direction.Up : Direction.Down;
-
       int initialETA = travelTimeInSeconds;
 
       if (elevator.Direction == Direction.Up)
@@ -198,20 +196,17 @@ namespace ElevatorSimulator
         if (elevator.CurrentFloor == elevator.DestinationFloor)
         {
           elevator.Direction = Direction.Stationary;
+
         }
-
-        int remainingDistance = Math.Abs(elevator.CurrentFloor - elevator.DestinationFloor);
-        int remainingETA = remainingDistance * 2;
-
-        Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {remainingETA} seconds");
-
+        UpdateElevatorStatus(elevator);
         Thread.Sleep(2000);
+      
       }
 
-      int finalETA = CalculateETA(elevator);
-      Console.WriteLine($"Elevator {elevator.Id} has reached the destination floor: {elevator.DestinationFloor}. ETA: {finalETA} seconds");
+  
+      Console.WriteLine($"Elevator {elevator.Id} has reached the destination floor: {elevator.DestinationFloor} .");
+  
     }
-
 
     // Update the status of all elevators and display the current status
     private static void UpdateElevatorStatus(List<Elevator> elevators)
