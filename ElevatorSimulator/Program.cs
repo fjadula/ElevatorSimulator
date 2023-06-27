@@ -3,6 +3,7 @@ using ElevatorSimulator.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace ElevatorSimulator
 {
@@ -31,11 +32,7 @@ namespace ElevatorSimulator
         switch (choice)
         {
           case 1:
-            foreach (var elevator in elevators)
-            {
-              elevator.ShowStatus();
-              Console.WriteLine();
-            }
+            UpdateElevatorStatus(elevators);
             break;
           case 2:
             Console.WriteLine("Enter the destination floor number:");
@@ -56,15 +53,13 @@ namespace ElevatorSimulator
               Console.WriteLine("How many people are waiting on the destination floor?");
               int peopleWaiting = Convert.ToInt32(Console.ReadLine());
 
-            
-
               // Update elevator properties accordingly
-              selectedElevator.CurrentFloor = destinationFloor;
+              selectedElevator.DestinationFloor = destinationFloor;
               selectedElevator.PeopleCount += peopleGettingOn;
               // Update other elevator properties as needed
 
               Console.WriteLine($"Elevator {selectedElevator.Id} called successfully!");
-              Console.WriteLine($"Elevator {selectedElevator.Id} reached the destination floor.");
+              MoveElevator(selectedElevator); // Simulate elevator movement
 
               // Prompt for the number of people getting off
               Console.WriteLine("How many people are getting off?");
@@ -105,7 +100,6 @@ namespace ElevatorSimulator
             }
             break;
 
-
           case 3:
             Console.WriteLine("Enter the elevator number:");
             int elevatorNum = Convert.ToInt32(Console.ReadLine());
@@ -138,9 +132,11 @@ namespace ElevatorSimulator
               Console.WriteLine("Invalid elevator number. Please try again.");
             }
             break;
+
           case 4:
             Console.WriteLine("Exiting the program...");
             break;
+
           default:
             Console.WriteLine("Invalid choice. Please try again.");
             break;
@@ -149,6 +145,7 @@ namespace ElevatorSimulator
         Console.WriteLine();
       } while (choice != 4);
     }
+
 
     // Calculate the closest elevator to the destination floor among the operational and stationary elevators
     private static Elevator GetClosestElevator(List<Elevator> elevators, int destinationFloor)
@@ -172,5 +169,72 @@ namespace ElevatorSimulator
 
       return closestElevator;
     }
+
+    // Simulate the movement of the elevator
+    // Simulate the movement of the elevator
+    private static void MoveElevator(Elevator elevator)
+    {
+      Console.WriteLine($"Elevator {elevator.Id} is moving from floor {elevator.CurrentFloor} to floor {elevator.DestinationFloor}...");
+      int distance = Math.Abs(elevator.CurrentFloor - elevator.DestinationFloor);
+      int travelTimeInSeconds = distance * 2; // Assuming 2 seconds for each floor
+      elevator.Direction = elevator.CurrentFloor < elevator.DestinationFloor ? Direction.Up : Direction.Down;
+
+      int initialETA = travelTimeInSeconds;
+
+      if (elevator.Direction == Direction.Up)
+      {
+        initialETA -= (elevator.CurrentFloor - 1) * 2;
+      }
+      else
+      {
+        initialETA -= (distance - (elevator.CurrentFloor - 1)) * 2;
+      }
+
+      Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {initialETA} seconds");
+
+      for (int i = 0; i < distance; i++)
+      {
+        elevator.CurrentFloor += elevator.Direction == Direction.Up ? 1 : -1;
+        if (elevator.CurrentFloor == elevator.DestinationFloor)
+        {
+          elevator.Direction = Direction.Stationary;
+        }
+
+        int remainingDistance = Math.Abs(elevator.CurrentFloor - elevator.DestinationFloor);
+        int remainingETA = remainingDistance * 2;
+
+        Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {remainingETA} seconds");
+
+        Thread.Sleep(2000);
+      }
+
+      int finalETA = CalculateETA(elevator);
+      Console.WriteLine($"Elevator {elevator.Id} has reached the destination floor: {elevator.DestinationFloor}. ETA: {finalETA} seconds");
+    }
+
+
+    // Update the status of all elevators and display the current status
+    private static void UpdateElevatorStatus(List<Elevator> elevators)
+    {
+      foreach (var elevator in elevators)
+      {
+        UpdateElevatorStatus(elevator);
+      }
+    }
+
+    // Update the status of a single elevator and display the current status
+    private static void UpdateElevatorStatus(Elevator elevator)
+    {
+      Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {CalculateETA(elevator)} seconds");
+
+    }
+
+    private static int CalculateETA(Elevator elevator)
+    {
+      int distance = Math.Abs(elevator.CurrentFloor - elevator.DestinationFloor);
+      int travelTimeInSeconds = distance  * 2; // Assuming 2 seconds for each floor
+      return travelTimeInSeconds;
+    }
   }
+
 }

@@ -9,6 +9,7 @@ namespace ElevatorSimulator.Models.BO
 
     public int Id { get; }
     public int CurrentFloor { get; set; }
+    public int DestinationFloor { get; set; }
     public Direction Direction { get; set; }
     public int PeopleCount { get; set; }
     public TimeSpan ExpectedTimeOfArrival { get; set; }
@@ -18,10 +19,13 @@ namespace ElevatorSimulator.Models.BO
     public Elevator()
     {
       Id = nextId++;
-      CurrentFloor = 1;
+      CurrentFloor = 0;
+      DestinationFloor = 0;
+      PeopleCount = 0;
       Status = ElevatorStatus.Operational;
       Direction = Direction.Stationary;
       WeightLimit = 10; // Default weight limit of 10 people
+
     }
 
     public void ShowStatus()
