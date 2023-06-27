@@ -8,38 +8,52 @@ using System.Threading.Tasks;
 
 namespace ElevatorSimulator.Service.Implementations
 {
-  public class ElevatorService
-  {
-    public static Elevator GetClosestElevator(List<Elevator> elevators, int destinationFloor)
+
+    public interface IElevatorService
     {
-      Elevator closestElevator = null;
-      int minDistance = int.MaxValue;
+      void UpdateElevatorStatus(List<Elevator> elevators);
+      Elevator GetClosestElevator(List<Elevator> elevators, int destinationFloor);
+    }
 
-      foreach (var elevator in elevators)
+    public class ElevatorService : IElevatorService
+    {
+      public void UpdateElevatorStatus(List<Elevator> elevators)
       {
-        if (elevator.Status == ElevatorStatus.Operational && elevator.Direction == Direction.Stationary)
+        Console.WriteLine("Elevator Status:");
+        foreach (var elevator in elevators)
         {
-          int distance = Math.Abs(elevator.CurrentFloor - destinationFloor);
-
-          if (distance < minDistance)
-          {
-            minDistance = distance;
-            closestElevator = elevator;
-          }
+          Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor} - Status: {elevator.Status} , People Count: {elevator.PeopleCount}");
         }
       }
 
-      return closestElevator;
-    }
-
-
-
-    public static void UpdateElevatorStatus(List<Elevator> elevators)
-    {
-      foreach (var elevator in elevators)
+      public Elevator GetClosestElevator(List<Elevator> elevators, int destinationFloor)
       {
-        elevator.UpdateElevatorStatus();
+        Elevator closestElevator = null;
+        int minDistance = int.MaxValue;
+
+        foreach (var elevator in elevators)
+        {
+          if (elevator.Status == ElevatorStatus.Operational)
+          {
+            int distance = Math.Abs(elevator.CurrentFloor - destinationFloor);
+            if (distance < minDistance)
+            {
+              closestElevator = elevator;
+              minDistance = distance;
+            }
+          }
+        }
+
+        return closestElevator;
       }
-    }
+
+
+    //  public  void UpdateElevatorStatus(List<Elevator> elevators)
+    //{
+    //  foreach (var elevator in elevators)
+    //  {
+    //    elevator.UpdateElevatorStatus();
+    //  }
+    //}
   }
 }
