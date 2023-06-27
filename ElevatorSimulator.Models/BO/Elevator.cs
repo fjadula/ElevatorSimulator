@@ -1,5 +1,6 @@
-﻿using ElevatorSimulator.Models.Enums;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using ElevatorSimulator.Models.Enums;
 
 namespace ElevatorSimulator.Models.BO
 {
@@ -25,19 +26,66 @@ namespace ElevatorSimulator.Models.BO
       Status = ElevatorStatus.Operational;
       Direction = Direction.Stationary;
       WeightLimit = 10; // Default weight limit of 10 people
-
     }
 
-    public void ShowStatus()
+
+
+    public void MoveElevator()
     {
-      Console.WriteLine("Elevator Status:");
-      Console.WriteLine($"ID: {Id}");
-      Console.WriteLine($"Current Floor: {CurrentFloor}");
-      Console.WriteLine($"Direction: {Direction}");
-      Console.WriteLine($"People Count: {PeopleCount}");
-      Console.WriteLine($"Expected Time of Arrival: {ExpectedTimeOfArrival}");
-      Console.WriteLine($"Status: {Status}");
-      Console.WriteLine($"Weight Limit: {WeightLimit} people");
+      Console.WriteLine($"Elevator {Id} is moving from floor {CurrentFloor} to floor {DestinationFloor}...");
+      int distance = Math.Abs(CurrentFloor - DestinationFloor);
+      int travelTimeInSeconds = distance * 2; // Assuming 2 seconds for each floor
+      Direction = CurrentFloor < DestinationFloor ? Direction.Up : Direction.Down;
+      int initialETA = travelTimeInSeconds;
+
+      if (Direction == Direction.Up)
+      {
+        initialETA -= (CurrentFloor - 1) * 2;
+      }
+      else
+      {
+        initialETA -= (distance - (CurrentFloor - 1)) * 2;
+      }
+
+      Console.WriteLine($"Elevator {Id} - Current Floor: {CurrentFloor}, Direction: {Direction}, People Count: {PeopleCount}, Status: {Status}, ETA: {initialETA} seconds");
+
+      for (int i = 0; i < distance; i++)
+      {
+        CurrentFloor += Direction == Direction.Up ? 1 : -1;
+        if (CurrentFloor == DestinationFloor)
+        {
+          Direction = Direction.Stationary;
+        }
+        UpdateElevatorStatus(this);
+        System.Threading.Thread.Sleep(2000);
+      }
+
+      Console.WriteLine($"Elevator {Id} has reached the destination floor: {DestinationFloor}.");
+    }
+
+    public static void UpdateElevatorStatus(List<Elevator> elevators)
+    {
+      foreach (var elevator in elevators)
+      {
+        UpdateElevatorStatus(elevator);
+      }
+    }
+
+    public void UpdateElevatorStatus()
+    {
+      Console.WriteLine($"Elevator {Id} - Current Floor: {CurrentFloor}, Direction: {Direction}, People Count: {PeopleCount}, Status: {Status}, ETA: {CalculateETA()} seconds");
+    }
+
+    public static void UpdateElevatorStatus(Elevator elevator)
+    {
+     // Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {CalculateETA(elevator)} seconds");
+    }
+
+    public int CalculateETA()
+    {
+      int distance = Math.Abs(CurrentFloor - DestinationFloor);
+      int travelTimeInSeconds = distance * 2; // Assuming 2 seconds for each floor
+      return travelTimeInSeconds;
     }
   }
 }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ElevatorSimulator.Models.DTO
+﻿namespace ElevatorSimulator.DTOs
 {
-  internal class Floor
+  public class FloorDTO
   {
+    public int FloorNumber { get; set; }
   }
 }

@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator", "Elevat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Models", "ElevatorSimulator.Models\ElevatorSimulator.Models.csproj", "{CBAE05A7-B951-4DCC-BD36-FDB5729482AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Services", "ElevatorSimulation.Service\ElevatorSimulator.Services.csproj", "{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElevatorSimulator.Service", "ElevatorSimulation.Service\ElevatorSimulator.Service.csproj", "{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
