@@ -7,7 +7,8 @@ namespace ElevatorSimulator
   {
     public static IServiceCollection AddElevatorService(this IServiceCollection services)
     {
-      services.AddScoped<ElevatorService, ElevatorService>();
+      services.AddScoped<ElevatorService>();
+      services.AddScoped<FloorService>();
       return services;
     }
   }

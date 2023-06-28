@@ -1,8 +1,9 @@
 ﻿namespace ElevatorSimulator.Models.BO
 {
-  public class FloorBO
+  public class Floor
   {
     public int FloorNumber { get; set; }
-
+    public int WaitingPassengers { get; set; }
+    
   }
 }
