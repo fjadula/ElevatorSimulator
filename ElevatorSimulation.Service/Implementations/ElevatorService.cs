@@ -12,11 +12,12 @@ namespace ElevatorSimulator.Service.Implementations
     Task<Elevator?> GetClosestElevator(List<Elevator> elevators, int destinationFloor);
     Task CallElevator(List<Elevator> elevators, List<Floor> floors);
 
-
   }
 
   public class ElevatorService : IElevatorService
   {
+    private const int elevatorTimeinSec = 1;//Time form one floor to the next assuming one second
+    #region Public Methods
     public void ShowElevatorStatus(List<Elevator> elevators)
     {
       Console.WriteLine("Elevator Status:");
@@ -25,7 +26,7 @@ namespace ElevatorSimulator.Service.Implementations
         Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor} - Status: {elevator.Status} , People Count: {elevator.PeopleCount}");
       }
     }
-    private const int elevatorTimeinSec = 1;
+   
     public async  Task<Elevator?> GetClosestElevator(List<Elevator> elevators, int destinationFloor)
     {
       Elevator? closestElevator = null;
@@ -166,8 +167,11 @@ namespace ElevatorSimulator.Service.Implementations
         Console.WriteLine("Invalid elevator number. Please try again.");
       }
     }
+#endregion Public Methods
 
-    private static void MoveElevator(Elevator selectedElevator,int elevatorTimeinSec)
+
+    #region Private Methods
+    private static void MoveElevator(Elevator selectedElevator, int elevatorTimeinSec)
     {
 
       Console.WriteLine($"Elevator {selectedElevator.Id} is moving from floor {selectedElevator.CurrentFloor} to floor {selectedElevator.DestinationFloor}...");
@@ -195,13 +199,11 @@ namespace ElevatorSimulator.Service.Implementations
 
       Console.WriteLine($"Elevator {selectedElevator.Id} has reached the destination floor: {selectedElevator.DestinationFloor}.");
     }
-    private static void UpdateElevatorStatus(Elevator elevator,int elevatorTimeinSec)
+    private static void UpdateElevatorStatus(Elevator elevator, int elevatorTimeinSec)
     {
       Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {CalculateETA(elevator, elevatorTimeinSec)} seconds");
     }
 
-   
-    #region Private Methods
     private static Tuple<int,string> AddPassengers(int numOfPeopleGettingOn, Elevator selectedElevator)
     {
       string weightLimitedExceeded;
