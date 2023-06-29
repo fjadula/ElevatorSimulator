@@ -12,7 +12,6 @@ namespace ElevatorSimulator
 {
   public class Program
   {
-    //private static ElevatorService elevatorService;
     private const int numberOfElevators = 3;
     private const int numbOfFloors = 10;
 
@@ -49,9 +48,10 @@ namespace ElevatorSimulator
         Console.WriteLine("Elevator Simulator Menu");
         Console.WriteLine("1. Show Status of all Elevators");
         Console.WriteLine("2. Manage Waiting Passengers");
-        Console.WriteLine("3. Call an Elevator");
-        Console.WriteLine("4. Set Status of an Elevator");
-        Console.WriteLine("5. Exit Program");
+        Console.WriteLine("3. Show all floors Status");
+        Console.WriteLine("4. Call an Elevator");
+        Console.WriteLine("5. Set Status of an Elevator");
+        Console.WriteLine("6. Exit Program");
 
         Console.WriteLine("Enter your choice (1-5):");
         choice = Convert.ToInt32(Console.ReadLine());
@@ -59,18 +59,22 @@ namespace ElevatorSimulator
         switch (choice)
         {
           case 1:
+
             elevatorService.ShowElevatorStatus(elevators);
             break;
           case 2:
             floorService.ManageWaitingPassengersOnFloor(floors);
             break;
           case 3:
-            elevatorService.CallElevator(elevators,floors);
+            FloorService.ShowFloorStatus(floors);
             break;
           case 4:
-            elevatorService.SetElevatorStatus(elevators);
+            elevatorService.CallElevator(elevators,floors);
             break;
           case 5:
+            elevatorService.SetElevatorStatus(elevators);
+            break;
+          case 6:
             Console.WriteLine("Exiting the program...");
             break;
           default:
@@ -79,7 +83,7 @@ namespace ElevatorSimulator
         }
 
         Console.WriteLine();
-      } while (choice != 5);
+      } while (choice != 6);
     }
   }
 }

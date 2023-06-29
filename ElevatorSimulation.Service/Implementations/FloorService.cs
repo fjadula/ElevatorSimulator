@@ -1,28 +1,32 @@
 ﻿using ElevatorSimulator.Models.BO;
-using System.Runtime.InteropServices;
+
 
 namespace ElevatorSimulator.Service.Implementations
 {
-
+  #region interfaces
   public interface IFloorService
   {
-    void AddWaitingPassengers(int numofPeopleWaiting);
+    //interfaces
   }
+  #endregion interfaces
   public class FloorService
   {
-
+    #region Public Methds
     public void ManageWaitingPassengersOnFloor(List<Floor> floors)
     {
-      Console.WriteLine("Enter the floor number:");
+      Console.WriteLine("Enter the floor number(Ground is 0):");
       int floorNum = Convert.ToInt32(Console.ReadLine());
-      if (floorNum >= 0 && floorNum <= floors.Count)
+      if (floorNum >= 0 && floorNum < floors.Count)
       {
-        Floor selectedFloor = floors[floorNum];
+       Floor selectedFloor;
+    
+       selectedFloor = floors[floorNum];
 
         Console.WriteLine("What would like to do?:");
         Console.WriteLine("1. Add waiting people");
         Console.WriteLine("2. Remove waiting people");
         int actionChoice = Convert.ToInt32(Console.ReadLine());
+    ;
 
         switch (actionChoice)
         {
@@ -35,7 +39,8 @@ namespace ElevatorSimulator.Service.Implementations
           case 2:
             Console.WriteLine("How many people do you want to remove from the floor?");
             int numofWaitingPeopleToRemove = Convert.ToInt32(Console.ReadLine());
-            RemoveWaitingPassengersFromFloor(numofWaitingPeopleToRemove,selectedFloor);
+            Console.WriteLine(RemoveWaitingPassengersFromFloor(numofWaitingPeopleToRemove,selectedFloor));
+         
             break;
 
           default:
@@ -54,15 +59,28 @@ namespace ElevatorSimulator.Service.Implementations
       selectedFloor.WaitingPassengers = selectedFloor.WaitingPassengers + numofPeopleWaiting;
       Console.WriteLine($"There are now {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}");
     }
-    public static void RemoveWaitingPassengersFromFloor(int numofPeopleToRemove, Floor selectedFloor)
+    public static string RemoveWaitingPassengersFromFloor(int numofPeopleToRemove, Floor selectedFloor)
     {
-
-      selectedFloor.WaitingPassengers = selectedFloor.WaitingPassengers - Math.Min(selectedFloor.WaitingPassengers, numofPeopleToRemove);
-      Console.WriteLine($"There are now {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}");
-
+      string message;
+      if (numofPeopleToRemove > selectedFloor.WaitingPassengers) {
+        numofPeopleToRemove = selectedFloor.WaitingPassengers;
+      }
+      selectedFloor.WaitingPassengers = selectedFloor.WaitingPassengers - numofPeopleToRemove;
+      message=$"There are now {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}";
+      return message;
     }
+
+    public static void ShowFloorStatus(List<Floor> floors)
+    {
+      Console.WriteLine("Floor Status:");
+      foreach (var floor in floors)
+      {
+        Console.WriteLine($"Floor number {floor.FloorNumber}, People Waiting Count: {floor.WaitingPassengers}");
+      }
+    }
+    #endregion
   }
-  
+
 }
 
 
