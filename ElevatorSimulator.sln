@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Models", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Service", "ElevatorSimulation.Service\ElevatorSimulator.Service.csproj", "{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.UnitTests", "ElevatorSimulator.UnitTests\ElevatorSimulator.UnitTests.csproj", "{47AEBA00-04B2-4D9E-A7D0-DDF4D1476E0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElevatorSimulator.Common", "ElevatorSimulator.Common\ElevatorSimulator.Common.csproj", "{3034AB15-5BC1-4B71-B5A7-6BF5DF6983C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35099A92-F7C2-4CE7-AC0D-0EF93CC26F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47AEBA00-04B2-4D9E-A7D0-DDF4D1476E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47AEBA00-04B2-4D9E-A7D0-DDF4D1476E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47AEBA00-04B2-4D9E-A7D0-DDF4D1476E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47AEBA00-04B2-4D9E-A7D0-DDF4D1476E0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3034AB15-5BC1-4B71-B5A7-6BF5DF6983C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3034AB15-5BC1-4B71-B5A7-6BF5DF6983C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3034AB15-5BC1-4B71-B5A7-6BF5DF6983C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3034AB15-5BC1-4B71-B5A7-6BF5DF6983C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

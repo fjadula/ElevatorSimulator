@@ -9,7 +9,7 @@ namespace ElevatorSimulator.Models.BO
   {
 
     private static int nextId = 1;
-    public int Id { get; }
+    public int Id { get; set; }
     public int CurrentFloor { get; set; }
     public int DestinationFloor { get; set; }
     public Direction Direction { get; set; }

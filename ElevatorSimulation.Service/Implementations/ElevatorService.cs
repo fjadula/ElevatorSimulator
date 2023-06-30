@@ -1,6 +1,8 @@
 ﻿using ElevatorSimulator.DTOs;
+using ElevatorSimulator.Common.Interfaces;
 using ElevatorSimulator.Models.BO;
 using ElevatorSimulator.Models.Enums;
+using System;
 using System.Security.Cryptography.X509Certificates;
 
 namespace ElevatorSimulator.Service.Implementations
@@ -11,12 +13,19 @@ namespace ElevatorSimulator.Service.Implementations
     void ShowElevatorStatus(List<Elevator> elevators);
     Task<Elevator?> GetClosestElevator(List<Elevator> elevators, int destinationFloor);
     Task CallElevator(List<Elevator> elevators, List<Floor> floors);
-
   }
+
+ 
 
   public class ElevatorService : IElevatorService
   {
     private const int elevatorTimeinSec = 1;//Time form one floor to the next assuming one second
+    private readonly IConsole _console;
+
+    public ElevatorService(IConsole console)
+    {
+      _console = console;
+    }
     #region Public Methods
     public void ShowElevatorStatus(List<Elevator> elevators)
     {
@@ -26,148 +35,248 @@ namespace ElevatorSimulator.Service.Implementations
         Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor} - Status: {elevator.Status} , People Count: {elevator.PeopleCount}");
       }
     }
-   
-    public async  Task<Elevator?> GetClosestElevator(List<Elevator> elevators, int destinationFloor)
+
+    public async Task<Elevator?> GetClosestElevator(List<Elevator> elevators, int destinationFloor)
     {
       Elevator? closestElevator = null;
       int minDistance = int.MaxValue;
+      int minPeopleCount = int.MaxValue;
 
       foreach (var elevator in elevators)
       {
         if (elevator.Status == ElevatorStatus.Operational)
         {
           int distance = Math.Abs(elevator.CurrentFloor - destinationFloor);
-          if (distance < minDistance)
+          int peopleCount = elevator.PeopleCount;
+
+          if (distance < minDistance || (distance == minDistance && peopleCount < minPeopleCount))
           {
             closestElevator = elevator;
             minDistance = distance;
+            minPeopleCount = peopleCount;
           }
         }
       }
 
-      return  await Task.FromResult(closestElevator);
+      return await Task.FromResult(closestElevator);
     }
 
-    public async Task CallElevator(List<Elevator> elevators,List<Floor> floors)
+    //public async Task CallElevator(List<Elevator> elevators,List<Floor> floors)
+    //{
+    //  _console.WriteLine("Enter the destination floor number:");
+    //  int destinationFloor = Convert.ToInt32(_console.ReadLine());
+
+    //  Elevator? selectedElevator = await GetClosestElevator(elevators, destinationFloor);
+    //  Floor selectedFloor = floors.FirstOrDefault(floor => floor.FloorNumber == destinationFloor);
+    //  Floor currentFloor = floors.FirstOrDefault(floor => floor.FloorNumber == selectedElevator.CurrentFloor);
+    //  string elevatormMessage;
+    //  string floorMessage;
+    //  int numOfPeopleWaiting = 0;
+    //  int peopleOnElevator = 0;
+
+    //  if (selectedElevator != null)
+    //  {
+    //    _console.WriteLine("How many people are getting on?");
+    //    int numPeopleGettingOn = Convert.ToInt32(_console.ReadLine());
+
+    //    numPeopleGettingOn = Math.Min(currentFloor.WaitingPassengers, numPeopleGettingOn);
+    //    floorMessage = FloorService.RemoveWaitingPassengersFromFloor(numPeopleGettingOn, currentFloor);
+    //    _console.WriteLine(floorMessage);
+    //    var addPassengerResult = AddPassengers(numPeopleGettingOn, selectedElevator);
+    //    peopleOnElevator = addPassengerResult.Item1;
+    //    elevatormMessage = addPassengerResult.Item2;
+    //    if (!String.IsNullOrEmpty(elevatormMessage))
+    //    {
+    //      _console.WriteLine(elevatormMessage);
+    //      return;
+    //    }
+
+
+    //    selectedElevator.DestinationFloor = destinationFloor;
+
+    //    _console.WriteLine($"Elevator {selectedElevator.Id} called successfully!");
+    //    MoveElevator(selectedElevator, elevatorTimeinSec); // Simulate elevator movement
+
+    //    _console.WriteLine("How many people are getting off?");
+    //    int peopleGettingOff = Convert.ToInt32(_console.ReadLine());
+    //    if (peopleGettingOff > 0 && selectedElevator.PeopleCount == 0)
+    //    {
+    //      _console.WriteLine(" There are no people in the elevator to get off.");
+    //    }
+    //    else
+    //    {
+    //      peopleOnElevator = RemovePassengers(peopleGettingOff, selectedElevator);
+    //    }
+
+    //    _console.WriteLine($"Elevator {selectedElevator.Id}, {peopleGettingOff} people got off. {peopleOnElevator} remaining.");
+
+    //    if (selectedFloor != null && selectedFloor.WaitingPassengers > 0)
+    //    {
+    //      numOfPeopleWaiting = selectedFloor.WaitingPassengers;
+    //      _console.WriteLine($"There are  {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}");
+
+    //      int maxNumPeopleGettingOnFromWaiting = Math.Min(selectedElevator.WeightLimit - selectedElevator.PeopleCount,numOfPeopleWaiting);
+    //      _console.WriteLine($"How many people from the waiting group are getting on? (Up to {maxNumPeopleGettingOnFromWaiting})");
+
+    //      int numPeopleGettingOnFromWaiting = Convert.ToInt32(_console.ReadLine());
+
+
+    //      if (numPeopleGettingOnFromWaiting > maxNumPeopleGettingOnFromWaiting)
+    //      {
+    //        _console.WriteLine($"Those are more people than are waiting so only {maxNumPeopleGettingOnFromWaiting} will get on.");
+    //        numPeopleGettingOnFromWaiting = maxNumPeopleGettingOnFromWaiting;
+    //      }
+    //        addPassengerResult = AddPassengers(numPeopleGettingOnFromWaiting, selectedElevator);
+    //        floorMessage = FloorService.RemoveWaitingPassengersFromFloor(numPeopleGettingOnFromWaiting, selectedFloor);
+    //        peopleOnElevator = addPassengerResult.Item1;
+    //        elevatormMessage = addPassengerResult.Item2;
+
+
+    //      if (!String.IsNullOrEmpty(elevatormMessage))
+    //      {
+    //        _console.WriteLine(elevatormMessage);
+    //        return;
+    //      }
+    //      _console.WriteLine($"Elevator {selectedElevator.Id} accommodated {numPeopleGettingOnFromWaiting} people from the waiting group.{floorMessage}");
+    //    }
+
+    //  }
+    //  else
+    //  {
+    //    _console.WriteLine("No operational elevators available. Please try again later.");
+    //  }
+    //}
+    public async Task CallElevator(List<Elevator> elevators, List<Floor> floors)
     {
-      Console.WriteLine("Enter the destination floor number:");
-      int destinationFloor = Convert.ToInt32(Console.ReadLine());
+      int destinationFloor = GetUserInput("Enter the destination floor number:");
+
+   
+      FloorService.ValidateDestinationFloor(floors, destinationFloor);
 
       Elevator? selectedElevator = await GetClosestElevator(elevators, destinationFloor);
-      Floor selectedFloor = floors.FirstOrDefault(floor => floor.FloorNumber == destinationFloor);
-      Floor currentFloor = floors.FirstOrDefault(floor => floor.FloorNumber == selectedElevator.CurrentFloor);
-      string elevatormMessage;
-      string floorMessage;
-      int numOfPeopleWaiting = 0;
-      int peopleOnElevator = 0;
 
       if (selectedElevator != null)
       {
-        Console.WriteLine("How many people are getting on?");
-        int numPeopleGettingOn = Convert.ToInt32(Console.ReadLine());
+        int numPeopleGettingOn = GetUserInput("How many people are getting on?");
+        Floor currentFloor = floors.FirstOrDefault(floor => floor.FloorNumber == selectedElevator.CurrentFloor);
+        int numPeopleToGetOn = Math.Min(currentFloor.WaitingPassengers, numPeopleGettingOn);
 
-        numPeopleGettingOn = Math.Min(selectedFloor.WaitingPassengers, numPeopleGettingOn);
-        floorMessage = FloorService.RemoveWaitingPassengersFromFloor(numPeopleGettingOn, currentFloor);
-        Console.WriteLine(floorMessage);
-        var addPassengerResult = AddPassengers(numPeopleGettingOn, selectedElevator);
-        peopleOnElevator = addPassengerResult.Item1;
-        elevatormMessage = addPassengerResult.Item2;
+      
+
+        var addPassengerResult = AddPassengers(numPeopleToGetOn, selectedElevator);
+        int peopleOnElevator = addPassengerResult.Item1;
+        string elevatormMessage = addPassengerResult.Item2;
+
         if (!String.IsNullOrEmpty(elevatormMessage))
         {
-          Console.WriteLine(elevatormMessage);
+          _console.WriteLine(elevatormMessage);
           return;
         }
+        string floorMessage = FloorService.RemoveWaitingPassengersFromFloor(numPeopleToGetOn, currentFloor);
+        _console.WriteLine(floorMessage);
 
-       
         selectedElevator.DestinationFloor = destinationFloor;
+        _console.WriteLine($"Elevator {selectedElevator.Id} called successfully!");
 
-        Console.WriteLine($"Elevator {selectedElevator.Id} called successfully!");
-        MoveElevator(selectedElevator, elevatorTimeinSec); // Simulate elevator movement
+        MoveElevator(selectedElevator, elevatorTimeinSec);
 
-        Console.WriteLine("How many people are getting off?");
-        int peopleGettingOff = Convert.ToInt32(Console.ReadLine());
+        int peopleGettingOff = GetUserInput("How many people are getting off?");
         if (peopleGettingOff > 0 && selectedElevator.PeopleCount == 0)
         {
-          Console.WriteLine(" There are no people in the elevator to get off.");
+          _console.WriteLine("There are no people in the elevator to get off.");
         }
         else
         {
           peopleOnElevator = RemovePassengers(peopleGettingOff, selectedElevator);
         }
 
-        Console.WriteLine($"Elevator {selectedElevator.Id}, {peopleGettingOff} people got off. {peopleOnElevator} remaining.");
+        _console.WriteLine($"Elevator {selectedElevator.Id}, {peopleGettingOff} people got off. {peopleOnElevator} remaining.");
 
+        Floor selectedFloor = floors.FirstOrDefault(floor => floor.FloorNumber == destinationFloor);
         if (selectedFloor != null && selectedFloor.WaitingPassengers > 0)
         {
-          numOfPeopleWaiting = selectedFloor.WaitingPassengers;
-          Console.WriteLine($"There are  {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}");
+          int numPeopleWaiting = selectedFloor.WaitingPassengers;
+          _console.WriteLine($"There are {numPeopleWaiting} people waiting on floor {selectedFloor.FloorNumber}");
 
-          int maxNumPeopleGettingOnFromWaiting = Math.Min(selectedElevator.WeightLimit - selectedElevator.PeopleCount,numOfPeopleWaiting);
-          Console.WriteLine($"How many people from the waiting group are getting on? (Up to {maxNumPeopleGettingOnFromWaiting})");
+          int maxNumPeopleGettingOnFromWaiting = Math.Min(selectedElevator.WeightLimit - selectedElevator.PeopleCount, numPeopleWaiting);
+          int numPeopleGettingOnFromWaiting = GetUserInput($"How many people from the waiting group are getting on? (Up to {maxNumPeopleGettingOnFromWaiting})");
 
-          int numPeopleGettingOnFromWaiting = Convert.ToInt32(Console.ReadLine());
-     
-          
           if (numPeopleGettingOnFromWaiting > maxNumPeopleGettingOnFromWaiting)
           {
-            Console.WriteLine($"Those are more people than are waiting so only {maxNumPeopleGettingOnFromWaiting} will get on.");
+            _console.WriteLine($"Those are more people than are waiting, so only {maxNumPeopleGettingOnFromWaiting} will get on.");
             numPeopleGettingOnFromWaiting = maxNumPeopleGettingOnFromWaiting;
           }
-            addPassengerResult = AddPassengers(numPeopleGettingOnFromWaiting, selectedElevator);
-            floorMessage = FloorService.RemoveWaitingPassengersFromFloor(numPeopleGettingOnFromWaiting, selectedFloor);
-            peopleOnElevator = addPassengerResult.Item1;
-            elevatormMessage = addPassengerResult.Item2;
-       
+
+          addPassengerResult = AddPassengers(maxNumPeopleGettingOnFromWaiting, selectedElevator);
+          
+          peopleOnElevator = addPassengerResult.Item1;
+          elevatormMessage = addPassengerResult.Item2;
 
           if (!String.IsNullOrEmpty(elevatormMessage))
           {
-            Console.WriteLine(elevatormMessage);
+            _console.WriteLine(elevatormMessage);
             return;
           }
-          Console.WriteLine($"Elevator {selectedElevator.Id} accommodated {numPeopleGettingOnFromWaiting} people from the waiting group.{floorMessage}");
-        }
+          floorMessage = FloorService.RemoveWaitingPassengersFromFloor(numPeopleGettingOnFromWaiting, selectedFloor);
 
+          _console.WriteLine($"Elevator {selectedElevator.Id} accommodated {numPeopleGettingOnFromWaiting} people from the waiting group.{floorMessage}");
+        }
       }
       else
       {
-        Console.WriteLine("No operational elevators available. Please try again later.");
+        _console.WriteLine("No operational elevators available. Please try again later.");
       }
     }
 
-    public  void SetElevatorStatus(List<Elevator> elevators)
+
+
+
+    public void SetElevatorStatus(List<Elevator> elevators)
     {
-      Console.WriteLine("Enter the elevator number:");
-      int elevatorNum = Convert.ToInt32(Console.ReadLine());
-      if (elevatorNum > 0 && elevatorNum <= elevators.Count)
+      _console.WriteLine("Enter the elevator number:");
+      int elevatorNum;
+      bool isValidElevatorNum = int.TryParse(_console.ReadLine(), out elevatorNum);
+
+      if (isValidElevatorNum && elevatorNum > 0 && elevatorNum <= elevators.Count)
       {
         Elevator selectedElevator = elevators[elevatorNum - 1];
 
-        Console.WriteLine("Enter the new status of the elevator:");
-        Console.WriteLine("1. Operational");
-        Console.WriteLine("2. OutOfOrder");
-        int statusChoice = Convert.ToInt32(Console.ReadLine());
+        _console.WriteLine("Enter the new status of the elevator:");
+        _console.WriteLine("1. Operational");
+        _console.WriteLine("2. OutOfOrder");
 
-        switch (statusChoice)
+        int statusChoice;
+        bool isValidStatusChoice = int.TryParse(_console.ReadLine(), out statusChoice);
+
+        if (isValidStatusChoice)
         {
-          case 1:
-            selectedElevator.Status = ElevatorStatus.Operational;
-            Console.WriteLine($"Elevator {elevatorNum} status updated to Operational successfully!");
-            break;
-          case 2:
-            selectedElevator.Status = ElevatorStatus.OutOfOrder;
-            Console.WriteLine($"Elevator {elevatorNum} status updated to OutOfOrder successfully!");
-            break;
-          default:
-            Console.WriteLine("Invalid status choice. Please try again.");
-            break;
+          switch (statusChoice)
+          {
+            case 1:
+              selectedElevator.Status = ElevatorStatus.Operational;
+              _console.WriteLine($"Elevator {elevatorNum} status updated to Operational successfully!");
+              break;
+            case 2:
+              selectedElevator.Status = ElevatorStatus.OutOfOrder;
+              _console.WriteLine($"Elevator {elevatorNum} status updated to OutOfOrder successfully!");
+              break;
+            default:
+              _console.WriteLine("Invalid status choice. Please try again.");
+              break;
+          }
+        }
+        else
+        {
+          _console.WriteLine("Invalid status choice. Please try again.");
         }
       }
       else
       {
-        Console.WriteLine("Invalid elevator number. Please try again.");
+        _console.WriteLine("Invalid elevator number. Please try again.");
       }
     }
-#endregion Public Methods
+
+    #endregion Public Methods
 
 
     #region Private Methods
@@ -193,7 +302,7 @@ namespace ElevatorSimulator.Service.Implementations
         UpdateElevatorStatus(selectedElevator, elevatorTimeinSec);
         if (selectedElevator.CurrentFloor != selectedElevator.DestinationFloor)
         {
-          System.Threading.Thread.Sleep(elevatorTimeinSec * 1000);
+          Sleep(elevatorTimeinSec);
         }
       }
 
@@ -234,6 +343,17 @@ namespace ElevatorSimulator.Service.Implementations
       int travelTimeInSeconds = distance * elevatorTimeinSec;
       return travelTimeInSeconds;
 
+    }
+
+    private static void Sleep(int elevatorTimeinSec)
+    {
+      Thread.Sleep(elevatorTimeinSec * 1000);
+    }
+
+    private int GetUserInput(string message)
+    {
+      _console.WriteLine(message);
+      return Convert.ToInt32(_console.ReadLine());
     }
 
     #endregion

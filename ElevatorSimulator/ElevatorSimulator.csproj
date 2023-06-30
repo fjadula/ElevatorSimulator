@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ElevatorSimulation.Service\ElevatorSimulator.Service.csproj" />
+    <ProjectReference Include="..\ElevatorSimulator.Common\ElevatorSimulator.Common.csproj" />
   </ItemGroup>
 
 </Project>
