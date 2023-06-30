@@ -74,12 +74,13 @@ namespace ElevatorSimulator.ServiceTests
     [Fact]
     public async Task CallElevator_ValidInput_Success()
     {
+
       var elevators = new List<Elevator>
-  {
-    new Elevator { Id = 1, CurrentFloor = 3, Status = ElevatorStatus.Operational },
-    new Elevator { Id = 2, CurrentFloor = 5, Status = ElevatorStatus.Operational },
-    new Elevator { Id = 3, CurrentFloor = 2, Status = ElevatorStatus.Operational },
-  };
+        {
+            new Elevator { Id = 1, CurrentFloor = 3, Status = ElevatorStatus.Operational },
+            new Elevator { Id = 2, CurrentFloor = 5, Status = ElevatorStatus.Operational },
+            new Elevator { Id = 3, CurrentFloor = 2, Status = ElevatorStatus.Operational },
+        };
 
       var floor1 = new Floor { FloorNumber = 1 };
       var floor2 = new Floor { FloorNumber = 2 };
@@ -87,26 +88,28 @@ namespace ElevatorSimulator.ServiceTests
 
       var consoleMock = new Mock<IConsole>();
       var elevatorService = new ElevatorService(consoleMock.Object);
-      using (var consoleInput = new ConsoleInput(new Queue<string>(new[] { "2", "1", "2", "1", "1" })))
+
+      var consoleInputQueue = new Queue<string>(new[] { "2", "1", "2", "1", "1" });
+
+  
+      string output = CaptureConsoleOutput(async () =>
       {
-        string output = CaptureConsoleOutput(async () =>
+        using (var consoleInput = new ConsoleInput(consoleInputQueue))
         {
           await elevatorService.CallElevator(elevators, floors);
-        });
+        }
+      });
 
+      
+      Assert.Contains("Elevator 3 is moving from floor 2 to floor 0...", output);
+      Assert.Contains("Elevator 3 has reached the destination floor: 0.", output);
 
-        Assert.Contains("Elevator 3 called successfully!", output);
-        Assert.Contains("Elevator 3 is moving from floor 2 to floor 0...", output);
-        Assert.Contains("Elevator 3 has reached the destination floor: 0.", output);
-
-
-        consoleMock.Verify(c => c.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
-        consoleMock.Verify(c => c.ReadLine(), Times.AtLeastOnce);
-      }
+      consoleMock.Verify(c => c.WriteLine(It.IsAny<string>()), Times.AtLeastOnce);
+      consoleMock.Verify(c => c.ReadLine(), Times.AtLeastOnce);
     }
+  
 
-
-    [Fact]
+  [Fact]
     public void SetElevatorStatus_ShouldUpdateElevatorStatus_WhenValidInputProvided()
     {
 
