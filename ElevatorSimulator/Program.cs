@@ -18,7 +18,7 @@ public class Program
 
     var elevatorService = serviceProvider.GetService<ElevatorService>();
     var floorService = serviceProvider.GetService<FloorService>();
-    var _console = serviceProvider.GetService<IConsole>();
+    //var _console = serviceProvider.GetService<IConsole>();
 
     List<Elevator> elevators = new List<Elevator>();
     for (int i = 0; i < numberOfElevators; i++)
@@ -38,7 +38,7 @@ public class Program
 
     do
     {
-      choice = ShowMenuAndGetChoice(_console);
+      choice = ShowMenuAndGetChoice();
 
       switch (choice)
       {
@@ -58,10 +58,10 @@ public class Program
           elevatorService.SetElevatorStatus(elevators);
           break;
         case 6:
-          _console.WriteLine("Exiting the program...");
+          Console.WriteLine("Exiting the program...");
           break;
         default:
-          _console.WriteLine("Invalid choice. Please try again.");
+          Console.WriteLine("Invalid choice. Please try again.");
           break;
       }
 
@@ -69,17 +69,17 @@ public class Program
     } while (choice != 6);
   }
 
-  private static int ShowMenuAndGetChoice(IConsole _console)
+  private static int ShowMenuAndGetChoice()
   {
-    _console.WriteLine("Elevator Simulator Menu");
-    _console.WriteLine("1. Show Status of all Elevators");
-    _console.WriteLine("2. Manage Waiting Passengers");
-    _console.WriteLine("3. Show all floors Status");
-    _console.WriteLine("4. Call an Elevator");
-    _console.WriteLine("5. Set Status of an Elevator");
-    _console.WriteLine("6. Exit Program");
-
-    _console.WriteLine("Enter your choice (1-6):");
+    Console.WriteLine("Elevator Simulator Menu");
+    Console.WriteLine("1. Show Status of all Elevators");
+    Console.WriteLine("2. Manage Waiting Passengers");
+    Console.WriteLine("3. Show all floors Status");
+    Console.WriteLine("4. Call an Elevator");
+    Console.WriteLine("5. Set Status of an Elevator");
+    Console.WriteLine("6. Exit Program");
+  
+    Console.WriteLine("Enter your choice (1-6):");
 
     if (int.TryParse(Console.ReadLine(), out int choice))
     {
