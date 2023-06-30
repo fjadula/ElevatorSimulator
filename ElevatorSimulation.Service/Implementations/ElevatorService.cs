@@ -7,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace ElevatorSimulator.Service.Implementations
 {
-  
+
   public interface IElevatorService
   {
     void ShowElevatorStatus(List<Elevator> elevators);
@@ -15,7 +15,7 @@ namespace ElevatorSimulator.Service.Implementations
     Task CallElevator(List<Elevator> elevators, List<Floor> floors);
   }
 
- 
+
 
   public class ElevatorService : IElevatorService
   {
@@ -150,7 +150,7 @@ namespace ElevatorSimulator.Service.Implementations
     {
       int destinationFloor = GetUserInput("Enter the destination floor number:");
 
-   
+
       FloorService.ValidateDestinationFloor(floors, destinationFloor);
 
       Elevator? selectedElevator = await GetClosestElevator(elevators, destinationFloor);
@@ -161,7 +161,7 @@ namespace ElevatorSimulator.Service.Implementations
         Floor currentFloor = floors.FirstOrDefault(floor => floor.FloorNumber == selectedElevator.CurrentFloor);
         int numPeopleToGetOn = Math.Min(currentFloor.WaitingPassengers, numPeopleGettingOn);
 
-      
+
 
         var addPassengerResult = AddPassengers(numPeopleToGetOn, selectedElevator);
         int peopleOnElevator = addPassengerResult.Item1;
@@ -208,7 +208,7 @@ namespace ElevatorSimulator.Service.Implementations
           }
 
           addPassengerResult = AddPassengers(maxNumPeopleGettingOnFromWaiting, selectedElevator);
-          
+
           peopleOnElevator = addPassengerResult.Item1;
           elevatormMessage = addPassengerResult.Item2;
 
@@ -313,15 +313,15 @@ namespace ElevatorSimulator.Service.Implementations
       Console.WriteLine($"Elevator {elevator.Id} - Current Floor: {elevator.CurrentFloor}, Direction: {elevator.Direction}, People Count: {elevator.PeopleCount}, Status: {elevator.Status}, ETA: {CalculateETA(elevator, elevatorTimeinSec)} seconds");
     }
 
-    private static Tuple<int,string> AddPassengers(int numOfPeopleGettingOn, Elevator selectedElevator)
+    private static Tuple<int, string> AddPassengers(int numOfPeopleGettingOn, Elevator selectedElevator)
     {
       string weightLimitedExceeded;
       int peopleOnElevator = 0;
       weightLimitedExceeded = Elevator.WeightLimitManagement(numOfPeopleGettingOn, selectedElevator);
-      Tuple <int, string> returnedValues = Tuple.Create(peopleOnElevator, weightLimitedExceeded);
-    
+      Tuple<int, string> returnedValues = Tuple.Create(peopleOnElevator, weightLimitedExceeded);
 
-      if (String.IsNullOrEmpty(weightLimitedExceeded)) 
+
+      if (String.IsNullOrEmpty(weightLimitedExceeded))
       {
         peopleOnElevator = selectedElevator.PeopleCount += numOfPeopleGettingOn;
         return returnedValues;

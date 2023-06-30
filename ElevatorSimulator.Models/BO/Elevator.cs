@@ -32,7 +32,7 @@ namespace ElevatorSimulator.Models.BO
 
     public static string WeightLimitManagement(int numOfPeopleGettingOn, Elevator selectedElevator)
     {
-      string message =string.Empty;
+      string message = string.Empty;
       if (numOfPeopleGettingOn > selectedElevator.WeightLimit - selectedElevator.PeopleCount)
       {
         message = "Weight limit exceeded. Cannot accommodate that many people."; ;

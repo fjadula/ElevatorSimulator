@@ -10,41 +10,41 @@ using Xunit;
 
 namespace ElevatorSimulator.ServiceTests
 {
-    public class FloorServiceShould
+  public class FloorServiceShould
+  {
+    [Fact]
+    public void AddWaitingPassengersToFloor_ValidInput_Success()
     {
-        [Fact]
-        public void AddWaitingPassengersToFloor_ValidInput_Success()
-        {
-            var floor = new Floor { FloorNumber = 1, WaitingPassengers = 0 };
-            int numPeopleWaiting = 5;
+      var floor = new Floor { FloorNumber = 1, WaitingPassengers = 0 };
+      int numPeopleWaiting = 5;
 
-            FloorService.AddWaitingPassengersToFloor(numPeopleWaiting, floor);
+      FloorService.AddWaitingPassengersToFloor(numPeopleWaiting, floor);
 
-            Assert.Equal(numPeopleWaiting, floor.WaitingPassengers);
-        }
+      Assert.Equal(numPeopleWaiting, floor.WaitingPassengers);
+    }
 
-        [Fact]
-        public void RemoveWaitingPassengersFromFloor_ValidInput_Success()
-        {
-            var floor = new Floor { FloorNumber = 1, WaitingPassengers = 10 };
-            int numPeopleToRemove = 5;
+    [Fact]
+    public void RemoveWaitingPassengersFromFloor_ValidInput_Success()
+    {
+      var floor = new Floor { FloorNumber = 1, WaitingPassengers = 10 };
+      int numPeopleToRemove = 5;
 
-            string message = FloorService.RemoveWaitingPassengersFromFloor(numPeopleToRemove, floor);
+      string message = FloorService.RemoveWaitingPassengersFromFloor(numPeopleToRemove, floor);
 
-            Assert.Equal(5, floor.WaitingPassengers);
-            Assert.Equal("There are now 5 people waiting on floor 1", message);
-        }
+      Assert.Equal(5, floor.WaitingPassengers);
+      Assert.Equal("There are now 5 people waiting on floor 1", message);
+    }
 
-        [Fact]
-        public void RemoveWaitingPassengersFromFloor_MoreThanAvailable_RemovesAllPassengers()
-        {
-            var floor = new Floor { FloorNumber = 1, WaitingPassengers = 5 };
-            int numPeopleToRemove = 10;
+    [Fact]
+    public void RemoveWaitingPassengersFromFloor_MoreThanAvailable_RemovesAllPassengers()
+    {
+      var floor = new Floor { FloorNumber = 1, WaitingPassengers = 5 };
+      int numPeopleToRemove = 10;
 
-            string message = FloorService.RemoveWaitingPassengersFromFloor(numPeopleToRemove, floor);
+      string message = FloorService.RemoveWaitingPassengersFromFloor(numPeopleToRemove, floor);
 
-            Assert.Equal(0, floor.WaitingPassengers);
-            Assert.Equal("There are now 0 people waiting on floor 1", message);
+      Assert.Equal(0, floor.WaitingPassengers);
+      Assert.Equal("There are now 0 people waiting on floor 1", message);
     }
 
     [Fact]
@@ -97,7 +97,7 @@ namespace ElevatorSimulator.ServiceTests
     [Fact]
     public void ValidateDestinationFloor_ValidFloorNumber_DoesNotPrintErrorMessage()
     {
-      // Arrange
+
       var floors = new List<Floor>
             {
                 new Floor { FloorNumber = 0 },
@@ -110,11 +110,10 @@ namespace ElevatorSimulator.ServiceTests
       using (var consoleOutput = new StringWriter())
       {
         string output = consoleOutput.ToString();
-        // Act
+
         FloorService.ValidateDestinationFloor(floors, destinationFloor);
 
-        // Assert
-        Assert.DoesNotContain("Invalid floor number.",output);
+        Assert.DoesNotContain("Invalid floor number.", output);
       }
     }
 

@@ -12,7 +12,7 @@ public class Program
   static void Main(string[] args)
   {
     var serviceProvider = new ServiceCollection()
-      .  AddSingleton<IConsole, ConsoleCustom>()
+      .AddSingleton<IConsole, ConsoleCustom>()
         .AddElevatorService()
         .BuildServiceProvider();
 

@@ -81,7 +81,7 @@ namespace ElevatorSimulator.Service.Implementations
       }
     }
 
-    public static  void ValidateDestinationFloor(List<Floor> floors, int destinationFloor)
+    public static void ValidateDestinationFloor(List<Floor> floors, int destinationFloor)
     {
       if (!floors.Any(floor => floor.FloorNumber == destinationFloor))
       {
