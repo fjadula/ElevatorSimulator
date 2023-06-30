@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ElevatorSimulator.Models.Enums;
 
 namespace ElevatorSimulator.Models.BO

@@ -2,17 +2,9 @@
 using ElevatorSimulator.HelperMethods;
 using ElevatorSimulator.Models.BO;
 using ElevatorSimulator.Models.Enums;
-using ElevatorSimulator.Service.Implementations;
+using ElevatorSimulator.Service;
 using Moq;
-using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
 using static ElevatorSimulator.HelperMethods.ConsoleHelpers;

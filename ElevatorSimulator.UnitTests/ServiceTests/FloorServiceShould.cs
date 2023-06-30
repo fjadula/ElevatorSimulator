@@ -1,6 +1,6 @@
 ﻿using ElevatorSimulator.Common.Interfaces;
 using ElevatorSimulator.Models.BO;
-using ElevatorSimulator.Service.Implementations;
+using ElevatorSimulator.Service;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Moq;
 using System;
@@ -10,7 +10,7 @@ using Xunit;
 
 namespace ElevatorSimulator.ServiceTests
 {
-  public class FloorServiceShould
+    public class FloorServiceShould
   {
     [Fact]
     public void AddWaitingPassengersToFloor_ValidInput_Success()

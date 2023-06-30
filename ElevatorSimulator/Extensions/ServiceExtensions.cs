@@ -1,9 +1,9 @@
-﻿using ElevatorSimulator.Service.Implementations;
+﻿using ElevatorSimulator.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ElevatorSimulator
 {
-  public static class ServiceExtensions
+    public static class ServiceExtensions
   {
     public static IServiceCollection AddElevatorService(this IServiceCollection services)
     {

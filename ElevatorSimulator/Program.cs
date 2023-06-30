@@ -1,7 +1,7 @@
 ﻿using ElevatorSimulator;
 using ElevatorSimulator.Common.Interfaces;
 using ElevatorSimulator.Models.BO;
-using ElevatorSimulator.Service.Implementations;
+using ElevatorSimulator.Service;
 using Microsoft.Extensions.DependencyInjection;
 
 public class Program
