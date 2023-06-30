@@ -5,4 +5,4 @@
 4. Check the Status of Elevators and Floors
 
 Note: people who get off the elevator are not added to the waiting passengers on the floor.
-If 2  or more elevators are all equal to the destination floor then the  one with the least passengers will be requested.
+If 2  or more elevators are all equal in distance to the destination floor then the  one with the least passengers will be requested.
