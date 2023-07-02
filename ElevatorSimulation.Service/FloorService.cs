@@ -1,5 +1,6 @@
 ﻿using ElevatorSimulator.Models.BO;
 using System;
+using static ElevatorSimulator.Common.Constants;
 
 namespace ElevatorSimulator.Service
 {
@@ -15,7 +16,7 @@ namespace ElevatorSimulator.Service
         #region Public Methds
         public void ManageWaitingPassengersOnFloor(List<Floor> floors)
         {
-            Console.WriteLine("Enter the floor number(Ground is 0):");
+            Console.WriteLine(Input.RequestFloorNumber);
             int floorNum = Convert.ToInt32(Console.ReadLine());
             if (floorNum >= 0 && floorNum < floors.Count)
             {
@@ -32,33 +33,33 @@ namespace ElevatorSimulator.Service
                 switch (actionChoice)
                 {
                     case 1:
-                        Console.WriteLine("How many people do you want to add to the floor?");
+                        Console.WriteLine(Input.PeopleAddingtoFloor);
                         int numofPeopleWaiting = Convert.ToInt32(Console.ReadLine());
                         AddWaitingPassengersToFloor(numofPeopleWaiting, selectedFloor);
                         break;
 
                     case 2:
-                        Console.WriteLine("How many people do you want to remove from the floor?");
+                        Console.WriteLine(Input.PeopleRemoveFromFloor);
                         int numofWaitingPeopleToRemove = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine(RemoveWaitingPassengersFromFloor(numofWaitingPeopleToRemove, selectedFloor));
 
                         break;
 
                     default:
-                        Console.WriteLine("Invalid action choice. Please try again.");
+                        Console.WriteLine(Messages.Error);
                         break;
                 }
             }
             else
             {
-                Console.WriteLine("Invalid floor number. Please try again.");
+                Console.WriteLine(Messages.InvalidFloor);
             }
         }
         public static void AddWaitingPassengersToFloor(int numofPeopleWaiting, Floor selectedFloor)
         {
 
             selectedFloor.WaitingPassengers = selectedFloor.WaitingPassengers + numofPeopleWaiting;
-            Console.WriteLine($"There are now {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}");
+            Console.WriteLine(Messages.ReturnNoPeopleOntheFloor,selectedFloor.WaitingPassengers,selectedFloor.FloorNumber);
         }
         public static string RemoveWaitingPassengersFromFloor(int numofPeopleToRemove, Floor selectedFloor)
         {
@@ -68,16 +69,16 @@ namespace ElevatorSimulator.Service
                 numofPeopleToRemove = selectedFloor.WaitingPassengers;
             }
             selectedFloor.WaitingPassengers = selectedFloor.WaitingPassengers - numofPeopleToRemove;
-            message = $"There are now {selectedFloor.WaitingPassengers} people waiting on floor {selectedFloor.FloorNumber}";
-            return message;
+            message= string.Format(Messages.ReturnNoPeopleOntheFloor,selectedFloor.WaitingPassengers,selectedFloor.FloorNumber);
+         return message;
         }
 
         public static void ShowFloorStatus(List<Floor> floors)
         {
-            Console.WriteLine("Floor Status:");
+            Console.WriteLine(Messages.FloorStatusInfo);
             foreach (var floor in floors)
             {
-                Console.WriteLine($"Floor number {floor.FloorNumber}, People Waiting Count: {floor.WaitingPassengers}");
+                Console.WriteLine(Messages.ReturnNoPeopleOntheFloor , floor.WaitingPassengers,floor.FloorNumber );
             }
         }
 
@@ -85,7 +86,7 @@ namespace ElevatorSimulator.Service
         {
             if (!floors.Any(floor => floor.FloorNumber == destinationFloor))
             {
-                Console.WriteLine("Invalid floor number.");
+                Console.WriteLine(Messages.InvalidFloor);
                 return;
             }
         }

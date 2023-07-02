@@ -1,5 +1,6 @@
 ﻿using System;
 using ElevatorSimulator.Models.Enums;
+using static ElevatorSimulator.Common.Constants;
 
 namespace ElevatorSimulator.Models.BO
 {
@@ -34,7 +35,7 @@ namespace ElevatorSimulator.Models.BO
       string message = string.Empty;
       if (numOfPeopleGettingOn > selectedElevator.WeightLimit - selectedElevator.PeopleCount)
       {
-        message = "Weight limit exceeded. Cannot accommodate that many people."; ;
+        message = Messages.WeightExceed;
         return message;
       }
 

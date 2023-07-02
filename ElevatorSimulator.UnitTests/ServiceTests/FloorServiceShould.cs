@@ -65,9 +65,9 @@ namespace ElevatorSimulator.ServiceTests
 
         string output = consoleOutput.ToString();
 
-        Assert.Contains("Floor number 0, People Waiting Count: 3", output);
-        Assert.Contains("Floor number 1, People Waiting Count: 5", output);
-        Assert.Contains("Floor number 2, People Waiting Count: 0", output);
+        Assert.Contains("There are now 3 people waiting on floor 0", output);
+        Assert.Contains("There are now 5 people waiting on floor 1", output);
+        Assert.Contains("There are now 0 people waiting on floor 2", output);
       }
     }
     [Fact]
@@ -90,7 +90,7 @@ namespace ElevatorSimulator.ServiceTests
 
         string output = consoleOutput.ToString();
 
-        Assert.Contains("Invalid floor number.", output);
+        Assert.Contains("Invalid floor number. Please try again.", output);
       }
     }
 

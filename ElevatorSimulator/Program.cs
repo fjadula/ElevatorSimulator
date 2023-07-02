@@ -3,6 +3,7 @@ using ElevatorSimulator.Common.Interfaces;
 using ElevatorSimulator.Models.BO;
 using ElevatorSimulator.Service;
 using Microsoft.Extensions.DependencyInjection;
+using static ElevatorSimulator.Common.Constants;
 
 public class Program
 {
@@ -18,7 +19,6 @@ public class Program
 
     var elevatorService = serviceProvider.GetService<ElevatorService>();
     var floorService = serviceProvider.GetService<FloorService>();
-    //var _console = serviceProvider.GetService<IConsole>();
 
     List<Elevator> elevators = new List<Elevator>();
     for (int i = 0; i < numberOfElevators; i++)
@@ -58,10 +58,10 @@ public class Program
           elevatorService.SetElevatorStatus(elevators);
           break;
         case 6:
-          Console.WriteLine("Exiting the program...");
+          Console.WriteLine(Messages.Exit);
           break;
         default:
-          Console.WriteLine("Invalid choice. Please try again.");
+          Console.WriteLine(Messages.Error);
           break;
       }
 
@@ -77,15 +77,15 @@ public class Program
     Console.WriteLine("3. Show all floors Status");
     Console.WriteLine("4. Call an Elevator");
     Console.WriteLine("5. Set Status of an Elevator");
-    Console.WriteLine("6. Exit Program");
+    Console.WriteLine("6. "+Messages.Exit);
   
-    Console.WriteLine("Enter your choice (1-6):");
+    Console.WriteLine(Messages.MainMenuChoice);
 
     if (int.TryParse(Console.ReadLine(), out int choice))
     {
       return choice;
     }
 
-    return -1; // Invalid choice
+    return -1;
   }
 }

@@ -4,7 +4,7 @@ namespace ElevatorSimulator.Models.Enums
 {
   public enum ElevatorStatus
   {
-    Operational,
-    OutOfOrder
+    Operational = 1 ,
+    OutOfOrder = 2
   }
 }
