@@ -6,7 +6,10 @@ using ElevatorSimulator.Service;
 using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using Moq;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Xunit;
@@ -105,63 +108,75 @@ namespace ElevatorSimulator.ServiceTests
       consoleMock.Verify(c => c.ReadLine(), Times.AtLeastOnce);
     }
 
-    //[Fact]
-    //public void SetElevatorStatus_ShouldUpdateElevatorStatus_WhenValidInputProvided()
-    //{
-    //  using (var consoleOutput = new ConsoleHelpers.ConsoleOutput())
-    //  {
-    //    var consoleMock = new Mock<IConsole>();
-    //    consoleMock.Setup(c => c.WriteLine(It.IsAny<string>())).Verifiable();
-    //    consoleMock.SetupSequence(c => c.ReadLine())
-    //        .Returns("2") 
-    //        .Returns("2"); 
+    [Fact]
+    public void SetElevatorStatus_ShouldUpdateElevatorStatus_WhenValidInputProvided()
+    {
+      var consoleMock = new Mock<IConsole>();
+      var consoleOutput = new StringBuilder();
+      var stringWriter = new StringWriter(consoleOutput);
 
-    //    var elevatorService = new ElevatorService(consoleMock.Object);
+      consoleMock.Setup(c => c.WriteLine(It.IsAny<string>())).Callback<string>(output => stringWriter.WriteLine(output));
+      consoleMock.SetupSequence(c => c.ReadLine())
+          .Returns("2") // Elevator number
+          .Returns("2"); // Status choice
 
-    //    var elevators = new List<Elevator>
-    //    {
-    //        new Elevator { Id = 1, Status = ElevatorStatus.Operational },
-    //        new Elevator { Id = 2, Status = ElevatorStatus.Operational },
-    //        new Elevator { Id = 3, Status = ElevatorStatus.Operational }
-    //    };
+      var elevatorService = new ElevatorService(consoleMock.Object);
 
-    //    elevatorService.SetElevatorStatus(elevators);
+      var elevators = new List<Elevator>
+    {
+        new Elevator { Id = 1, Status = ElevatorStatus.Operational },
+        new Elevator { Id = 2, Status = ElevatorStatus.Operational },
+        new Elevator { Id = 3, Status = ElevatorStatus.Operational }
+    };
 
-        
-    //    Assert.Equal(ElevatorStatus.OutOfOrder, elevators[1].Status);
-    //    consoleMock.Verify(c => c.WriteLine("Elevator 2 status updated to OutOfOrder successfully!"), Times.Once);
-    //  }
-    //}
-    //[Fact]
-    //public void SetElevatorStatus_ShouldNotUpdateElevatorStatus_WhenInvalidElevatorNumberProvided()
-    //{
-    //  // Arrange
-    //  var consoleMock = new Mock<IConsole>();
-    //  var elevatorService = new ElevatorService(consoleMock.Object);
+      using (StringReader sr = new StringReader(""))
+      {
+        Console.SetIn(sr);
+        Console.SetOut(stringWriter);
 
-    //  var elevators = new List<Elevator>
-    //{
-    //    new Elevator { Id = 1, Status = ElevatorStatus.Operational },
-    //    new Elevator { Id = 2, Status = ElevatorStatus.Operational },
-    //    new Elevator { Id = 3, Status = ElevatorStatus.Operational }
-    //};
+        elevatorService.SetElevatorStatus(elevators);
 
-    //  consoleMock.SetupSequence(c => c.ReadLine())
-    //      .Returns("4") 
-    //      .Returns("2"); 
+        // Assert
+        Assert.Equal(ElevatorStatus.OutOfOrder, elevators[1].Status);
+        Assert.Contains("Elevator status updated successfully!", consoleOutput.ToString());
 
-    //  consoleMock.Setup(c => c.WriteLine(It.IsAny<string>())).Verifiable();
+      }
 
-      
-    //  elevatorService.SetElevatorStatus(elevators);
+    }
 
-     
-    //  Assert.Equal(ElevatorStatus.Operational, elevators[1].Status);
-    //  consoleMock.Verify(c => c.WriteLine("Invalid elevator number. Please try again."), Times.Once);
-    //  consoleMock.Verify(); 
-    //}
+    [Fact]
+    public void SetElevatorStatus_ShouldNotUpdateElevatorStatus_WhenInvalidElevatorNumberProvided()
+    {
+      // Arrange
+      var consoleMock = new Mock<IConsole>();
+      var elevatorService = new ElevatorService(consoleMock.Object);
+
+      var elevators = new List<Elevator>
+    {
+        new Elevator { Id = 1, Status = ElevatorStatus.Operational },
+        new Elevator { Id = 2, Status = ElevatorStatus.Operational },
+        new Elevator { Id = 3, Status = ElevatorStatus.Operational }
+    };
+
+      consoleMock.SetupSequence(c => c.ReadLine())
+          .Returns("4")
+          .Returns("2");
+
+      var consoleOutput = new StringBuilder();
+      consoleMock.Setup(c => c.WriteLine(It.IsAny<string>())).Callback<string>(output => consoleOutput.AppendLine(output)).Verifiable();
+
+      // Act
+      elevatorService.SetElevatorStatus(elevators);
+
+      // Assert
+      Assert.Equal(ElevatorStatus.Operational, elevators[1].Status);
+      Assert.Contains("Invalid choice. Please try again.", consoleOutput.ToString());
+      consoleMock.Verify();
+    }
+
 
   }
-  }
+}
+
 
 

@@ -147,55 +147,57 @@ namespace ElevatorSimulator.Service
             }
         }
 
-       public void SetElevatorStatus(List<Elevator> elevators)
-{
-    Console.WriteLine(Input.SelectElevatorNumber);
-    int elevatorNum;
-    bool isValidElevatorNum = int.TryParse(Console.ReadLine(), out elevatorNum);
-
-    if (isValidElevatorNum && elevatorNum > 0 && elevatorNum <= elevators.Count)
+    public void SetElevatorStatus(List<Elevator> elevators)
     {
+      Console.WriteLine(Input.SelectElevatorNumber);
+      int elevatorNum;
+      bool isValidElevatorNum = int.TryParse(_console.ReadLine(), out elevatorNum);
+
+      if (isValidElevatorNum && elevatorNum > 0 && elevatorNum <= elevators.Count)
+      {
         Elevator selectedElevator = elevators[elevatorNum - 1];
 
-        Console.WriteLine(Messages.SelectElevatorStatus);
-        Console.WriteLine("1. " + ElevatorStatus.Operational);
-        Console.WriteLine("2. " + ElevatorStatus.OutOfOrder);
+        _console.WriteLine(Messages.SelectElevatorStatus);
+        _console.WriteLine("1. " + ElevatorStatus.Operational);
+        _console.WriteLine("2. " + ElevatorStatus.OutOfOrder);
 
         int statusChoice;
-        bool isValidStatusChoice = int.TryParse(Console.ReadLine(), out statusChoice);
+        bool isValidStatusChoice = int.TryParse(_console.ReadLine(), out statusChoice);
 
         if (isValidStatusChoice)
         {
-            switch (statusChoice)
-            {
-                case 1:
-                    selectedElevator.Status = ElevatorStatus.Operational;
-                    Console.WriteLine(Messages.StatusUpdated);
-                    break;
-                case 2:
-                    selectedElevator.Status = ElevatorStatus.OutOfOrder;
-                    Console.WriteLine(Messages.StatusUpdated);
-                    break;
-                default:
-                    Console.WriteLine(Messages.Error);
-                    break;
-            }
+          switch (statusChoice)
+          {
+            case 1:
+              selectedElevator.Status = ElevatorStatus.Operational;
+              _console.WriteLine(Messages.StatusUpdated);
+              break;
+            case 2:
+              selectedElevator.Status = ElevatorStatus.OutOfOrder;
+              _console.WriteLine(Messages.StatusUpdated);
+              break;
+            default:
+              _console.WriteLine(Messages.Error);
+              break;
+          }
         }
         else
         {
-            Console.WriteLine(Messages.Error);
+          _console.WriteLine(Messages.Error);
         }
+      }
+      else
+      {
+        _console.WriteLine(Messages.Error);
+      }
     }
-    else
-    {
-        Console.WriteLine(Messages.Error);
-    }
-}
 
-        #endregion Public Methods
 
-        #region Private Methods
-        private static void MoveElevator(Elevator selectedElevator, int elevatorTimeinSec)
+
+    #endregion Public Methods
+
+    #region Private Methods
+    private static void MoveElevator(Elevator selectedElevator, int elevatorTimeinSec)
         {
 
             Console.WriteLine(Messages.InitialMovingElevator,selectedElevator.Id, selectedElevator.CurrentFloor,selectedElevator.DestinationFloor);
